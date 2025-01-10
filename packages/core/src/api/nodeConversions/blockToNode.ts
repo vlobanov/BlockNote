@@ -9,6 +9,7 @@ import type {
   PartialTableContent,
   StyleSchema,
   StyledText,
+  Styles,
 } from "../../schema";
 
 import type { PartialBlock } from "../../blocks/defaultBlocks";
@@ -18,18 +19,10 @@ import {
 } from "../../schema/inlineContent/types.js";
 import { UnreachableCaseError } from "../../util/typescript.js";
 
-/**
- * Convert a StyledText inline element to a
- * prosemirror text node with the appropriate marks
- */
-function styledTextToNodes<T extends StyleSchema>(
-  styledText: StyledText<T>,
-  schema: Schema,
-  styleSchema: T
-): Node[] {
+function stylesToMarks<T extends StyleSchema>(styles: Styles<T>, schema: Schema, styleSchema: T) {
   const marks: Mark[] = [];
 
-  for (const [style, value] of Object.entries(styledText.styles)) {
+  for (const [style, value] of Object.entries(styles)) {
     const config = styleSchema[style];
     if (!config) {
       throw new Error(`style ${style} not found in styleSchema`);
@@ -43,6 +36,20 @@ function styledTextToNodes<T extends StyleSchema>(
       throw new UnreachableCaseError(config.propSchema);
     }
   }
+
+  return marks;
+}
+
+/**
+ * Convert a StyledText inline element to a
+ * prosemirror text node with the appropriate marks
+ */
+function styledTextToNodes<T extends StyleSchema>(
+  styledText: StyledText<T>,
+  schema: Schema,
+  styleSchema: T
+): Node[] {
+  const marks = stylesToMarks(styledText.styles, schema, styleSchema);
 
   return (
     styledText.text
@@ -216,6 +223,10 @@ function blockOrInlineContentToContentNode(
 
   if (!block.content) {
     contentNode = schema.nodes[type].createChecked(block.props);
+    if('styles' in block && block.styles) {
+      const marks = stylesToMarks(block.styles, schema, styleSchema);
+      contentNode = contentNode.mark(marks);
+    }
   } else if (typeof block.content === "string") {
     const nodes = inlineContentToNodes([block.content], schema, styleSchema);
     contentNode = schema.nodes[type].createChecked(block.props, nodes);
