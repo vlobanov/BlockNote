@@ -330,8 +330,11 @@ export function nodeToCustomInlineContent<
     type: node.type.name,
     props,
     content,
-    styles,
   } as InlineContentFromConfig<I[keyof I], S>;
+
+  if(styles !== undefined) {
+    (ic as any).styles = styles;
+  }
   return ic;
 }
 
