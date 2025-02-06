@@ -32,6 +32,28 @@ const mention = createInlineContentSpec(
   }
 );
 
+const note = createInlineContentSpec(
+  {
+    type: "note" as const,
+    propSchema: {
+      notice: {
+        default: "",
+      },
+    },
+    content: "styledUniform",
+  },
+  {
+    render: (ic) => {
+      const dom = document.createElement("span");
+      dom.appendChild(document.createTextNode("[" + ic.props.notice + "]"));
+
+      return {
+        dom,
+      };
+    },
+  }
+);
+
 const tag = createInlineContentSpec(
   {
     type: "tag" as const,
@@ -58,6 +80,7 @@ const schema = BlockNoteSchema.create({
   inlineContentSpecs: {
     ...defaultInlineContentSpecs,
     mention,
+    note,
     tag,
   },
 });
@@ -86,6 +109,27 @@ export const customInlineContentTestCases: EditorTestCases<
               type: "mention",
               props: {
                 user: "Matthew",
+              },
+              content: undefined,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "note/basic",
+      blocks: [
+        {
+          type: "paragraph",
+          content: [
+            "Please remember: ",
+            {
+              type: "note",
+              props: {
+                notice: "keep the door closed",
+              },
+              styles: {
+                bold: true,
               },
               content: undefined,
             },

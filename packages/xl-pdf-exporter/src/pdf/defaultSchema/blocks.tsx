@@ -43,6 +43,16 @@ export const pdfBlockMappingForDefaultSchema: BlockMapping<
       </ListItem>
     );
   },
+  letteredListItem: (block, exporter, _nestingLevel, numberedListIndex) => {
+    // const style = blocknoteDefaultPropsToReactPDFStyle(block.props);
+    // console.log("NUMBERED LIST ITEM", block.props.textAlignment, style);
+    const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+    return (
+      <ListItem listMarker={`${letters[(numberedListIndex || 1) - 1]}.`}>
+        <Text>{exporter.transformInlineContent(block.content)}</Text>
+      </ListItem>
+    );
+  },
   // would be nice to have pdf checkboxes:
   // https://github.com/diegomura/react-pdf/issues/2103
   checkListItem: (block, exporter) => {

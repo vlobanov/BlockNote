@@ -31,6 +31,7 @@ import { NumberedListItem } from "./ListItemBlockContent/NumberedListItemBlockCo
 import { Paragraph } from "./ParagraphBlockContent/ParagraphBlockContent.js";
 import { Table } from "./TableBlockContent/TableBlockContent.js";
 import { VideoBlock } from "./VideoBlockContent/VideoBlockContent.js";
+import {LetteredListItem} from "./ListItemBlockContent/LetteredListItemBlockContent/LetteredListItemBlockContent";
 
 export { customizeCodeBlock } from "./CodeBlockContent/CodeBlockContent.js";
 
@@ -40,6 +41,7 @@ export const defaultBlockSpecs = {
   codeBlock: CodeBlock,
   bulletListItem: BulletListItem,
   numberedListItem: NumberedListItem,
+  letteredListItem: LetteredListItem,
   checkListItem: CheckListItem,
   table: Table,
   file: FileBlock,

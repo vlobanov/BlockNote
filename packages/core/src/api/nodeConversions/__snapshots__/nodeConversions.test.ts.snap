@@ -565,6 +565,42 @@ exports[`Test BlockNote-Prosemirror conversion > Case: custom inline content sch
 }
 `;
 
+exports[`Test BlockNote-Prosemirror conversion > Case: custom inline content schema > Convert note/basic to/from prosemirror 1`] = `
+{
+  "attrs": {
+    "backgroundColor": "default",
+    "id": "1",
+    "textColor": "default",
+  },
+  "content": [
+    {
+      "attrs": {
+        "textAlignment": "left",
+      },
+      "content": [
+        {
+          "text": "Please remember: ",
+          "type": "text",
+        },
+        {
+          "attrs": {
+            "notice": "Matthew",
+          },
+          "marks": [
+            {
+              "type": "bold",
+            },
+          ],
+          "type": "note",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "blockContainer",
+}
+`;
+
 exports[`Test BlockNote-Prosemirror conversion > Case: custom inline content schema > Convert tag/basic to/from prosemirror 1`] = `
 {
   "attrs": {
