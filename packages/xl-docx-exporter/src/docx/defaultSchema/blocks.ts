@@ -87,6 +87,16 @@ export const docxBlockMappingForDefaultSchema: BlockMapping<
       },
     });
   },
+  letteredListItem: (block, exporter, nestingLevel) => {
+    return new Paragraph({
+      ...blockPropsToStyles(block.props, exporter.options.colors),
+      children: exporter.transformInlineContent(block.content),
+      numbering: {
+        reference: "blocknote-lettered-list",
+        level: nestingLevel,
+      },
+    });
+  },
   bulletListItem: (block, exporter, nestingLevel) => {
     return new Paragraph({
       ...blockPropsToStyles(block.props, exporter.options.colors),

@@ -32,6 +32,7 @@ import { Paragraph } from "./ParagraphBlockContent/ParagraphBlockContent.js";
 import { Quote } from "./QuoteBlockContent/QuoteBlockContent.js";
 import { Table } from "./TableBlockContent/TableBlockContent.js";
 import { VideoBlock } from "./VideoBlockContent/VideoBlockContent.js";
+import {LetteredListItem} from "./ListItemBlockContent/LetteredListItemBlockContent/LetteredListItemBlockContent";
 
 export const defaultBlockSpecs = {
   paragraph: Paragraph,
@@ -40,6 +41,7 @@ export const defaultBlockSpecs = {
   codeBlock: CodeBlock,
   bulletListItem: BulletListItem,
   numberedListItem: NumberedListItem,
+  letteredListItem: LetteredListItem,
   checkListItem: CheckListItem,
   table: Table,
   file: FileBlock,

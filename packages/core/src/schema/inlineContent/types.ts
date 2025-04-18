@@ -4,7 +4,7 @@ import { StyleSchema, Styles } from "../styles/types.js";
 
 export type CustomInlineContentConfig = {
   type: string;
-  content: "styled" | "none"; // | "plain"
+  content: "styled" | "none" | "styledUniform"; // | "plain"
   readonly propSchema: PropSchema;
   // content: "inline" | "none" | "table";
 };
@@ -55,6 +55,7 @@ export type CustomInlineContentFromConfig<
     : I["content"] extends "none"
     ? undefined
     : never;
+  styles?: I["content"] extends "styledUniform" ? Styles<S> : never;
 };
 
 export type InlineContentFromConfig<
@@ -81,6 +82,7 @@ export type PartialCustomInlineContentFromConfig<
     : I["content"] extends "none"
     ? undefined
     : never;
+  styles?: I["content"] extends "styledUniform" ? Styles<S> : never;
 };
 
 export type PartialInlineContentFromConfig<

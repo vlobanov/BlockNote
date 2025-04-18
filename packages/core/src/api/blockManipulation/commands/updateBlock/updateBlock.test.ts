@@ -157,13 +157,13 @@ describe("Test updateBlock", () => {
             {
               type: "text",
               text: "New",
-              styles: { backgroundColor: "blue" },
+              styles: { backgroundColor: "blue" as any },
             },
             { type: "text", text: " ", styles: {} },
             {
               type: "text",
               text: "content",
-              styles: { backgroundColor: "blue" },
+              styles: { backgroundColor: "blue" as any },
             },
           ],
         })
@@ -213,13 +213,13 @@ describe("Test updateBlock", () => {
             {
               type: "text",
               text: "New",
-              styles: { backgroundColor: "blue" },
+              styles: { backgroundColor: "blue" as any },
             },
             { type: "text", text: " ", styles: {} },
             {
               type: "text",
               text: "content",
-              styles: { backgroundColor: "blue" },
+              styles: { backgroundColor: "blue" as any },
             },
           ],
           children: [

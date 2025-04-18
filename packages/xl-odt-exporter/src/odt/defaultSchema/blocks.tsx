@@ -167,23 +167,40 @@ const wrapWithLists = (
 };
 
 export const odtBlockMappingForDefaultSchema: BlockMapping<
-  DefaultBlockSchema & typeof pageBreakSchema.blockSchema,
-  any,
-  any,
-  React.ReactNode,
-  React.ReactNode
+    DefaultBlockSchema & typeof pageBreakSchema.blockSchema,
+    any,
+    any,
+    React.ReactNode,
+    React.ReactNode
 > = {
   paragraph: (block, exporter, nestingLevel) => {
     const styleName = createParagraphStyle(
-      exporter as ODTExporter<any, any, any>,
-      block.props
+        exporter as ODTExporter<any, any, any>,
+        block.props
     );
 
     return (
-      <text:p text:style-name={styleName}>
-        {getTabs(nestingLevel)}
-        {exporter.transformInlineContent(block.content)}
-      </text:p>
+        <text:p text:style-name={styleName}>
+          {getTabs(nestingLevel)}
+          {exporter.transformInlineContent(block.content)}
+        </text:p>
+    );
+  },
+  letteredListItem: (block, exporter, nestingLevel) => {
+    const styleName = createParagraphStyle(
+        exporter as ODTExporter<any, any, any>,
+        block.props
+    );
+
+    return (
+        <text:list text:style-name="L1">
+          <text:list-item>
+            <text:p text:style-name={styleName}>
+              {getTabs(nestingLevel)}
+              {exporter.transformInlineContent(block.content)}
+            </text:p>
+          </text:list-item>
+        </text:list>
     );
   },
 

@@ -130,6 +130,32 @@ export function contentNodeToTableContent<
   return ret;
 }
 
+function contentNodeToStyles<
+    S extends StyleSchema
+>(contentNode: Node, styleSchema: S): Styles<S> {
+  const styles: Styles<S> = {};
+
+  for (const mark of contentNode.marks) {
+    if (mark.type.name === "link") {
+      continue;
+    }
+    const config = styleSchema[mark.type.name];
+
+    if (!config) {
+      throw new Error(`style ${mark.type.name} not found in styleSchema`);
+    }
+    if (config.propSchema === "boolean") {
+      (styles as any)[config.type] = true;
+    } else if (config.propSchema === "string") {
+      (styles as any)[config.type] = mark.attrs.stringValue;
+    } else {
+      throw new UnreachableCaseError(config.propSchema);
+    }
+  }
+
+  return styles;
+}
+
 /**
  * Converts an internal (prosemirror) content node to a BlockNote InlineContent array.
  */
@@ -369,11 +395,18 @@ export function nodeToCustomInlineContent<
     content = undefined;
   }
 
+  const styles = (icConfig.content === "styledUniform") ? contentNodeToStyles(node, styleSchema) : undefined;
+
   const ic = {
     type: node.type.name,
     props,
     content,
   } as InlineContentFromConfig<I[keyof I], S>;
+
+  if(styles !== undefined) {
+    (ic as any).styles = styles;
+  }
+
   return ic;
 }
 
