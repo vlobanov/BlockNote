@@ -49,32 +49,27 @@ const LetteredListItemBlockContent = createStronglyTypedTiptapNode({
                 handler: ({ state, chain, range }) => {
                     const blockInfo = getBlockInfoFromSelection(state);
                     if (
-                        !blockInfo.isBlockContainer ||
-                        blockInfo.blockContent.node.type.spec.content !== "inline*" ||
-                        blockInfo.blockNoteType === "letteredListItem"
+                      !blockInfo.isBlockContainer ||
+                      blockInfo.blockContent.node.type.spec.content !== "inline*" ||
+                      blockInfo.blockNoteType === "letteredListItem"
                     ) {
                         return;
                     }
-                    // console.log("YOOOOOOO", match);
-                    // const startIndex = 1; // a == 1
+                    const startIndex = 1; // a == 1
 
                     chain()
-                        .command(
-                            updateBlockCommand(
-                                this.options.editor,
-                                blockInfo.bnBlock.beforePos as any,
-                                // {
-                                //     type: "letteredListItem",
-                                //     props:
-                                //         (startIndex === 1 && {}) ||
-                                //         ({
-                                //             start: startIndex,
-                                //         } as unknown),
-                                // }
-                            )
-                        )
-                        // Removes the "1." characters used to set the list.
-                        .deleteRange({ from: range.from, to: range.to });
+                      .command(
+                        updateBlockCommand(blockInfo.bnBlock.beforePos, {
+                            type: "letteredListItem",
+                            props:
+                              (startIndex === 1 && {}) ||
+                              ({
+                                  start: startIndex,
+                              } as any),
+                        })
+                      )
+                      // Removes the "1." characters used to set the list.
+                      .deleteRange({ from: range.from, to: range.to });
                 },
             }),
         ];
@@ -86,19 +81,19 @@ const LetteredListItemBlockContent = createStronglyTypedTiptapNode({
             "Mod-Shift-7": () => {
                 const blockInfo = getBlockInfoFromSelection(this.editor.state);
                 if (
-                    !blockInfo.isBlockContainer ||
-                    blockInfo.blockContent.node.type.spec.content !== "inline*"
+                  !blockInfo.isBlockContainer ||
+                  blockInfo.blockContent.node.type.spec.content !== "inline*"
                 ) {
                     return true;
                 }
 
                 return this.editor.commands.command(
-                    updateBlockCommand(this.options.editor, blockInfo.bnBlock.beforePos as any,
+                  updateBlockCommand(this.options.editor, blockInfo.bnBlock.beforePos as any,
                     //     {
                     //     type: "letteredListItem",
                     //     props: {},
                     // }
-                    )
+                  )
                 );
             },
         };
@@ -129,11 +124,11 @@ const LetteredListItemBlockContent = createStronglyTypedTiptapNode({
                     }
 
                     if (
-                        parent.tagName === "OL" ||
-                        (parent.tagName === "DIV" && parent.parentElement!.tagName === "OL")
+                      parent.tagName === "OL" ||
+                      (parent.tagName === "DIV" && parent.parentElement!.tagName === "OL")
                     ) {
                         const startIndex =
-                            parseInt(parent.getAttribute("start") || "1") || 1;
+                          parseInt(parent.getAttribute("start") || "1") || 1;
 
                         if (element.previousSibling || startIndex === 1) {
                             return {};
@@ -177,21 +172,21 @@ const LetteredListItemBlockContent = createStronglyTypedTiptapNode({
 
     renderHTML({ HTMLAttributes }) {
         return createDefaultBlockDOMOutputSpec(
-            this.name,
-            // We use a <p> tag, because for <li> tags we'd need an <ol> element to
-            // put them in to be semantically correct, which we can't have due to the
-            // schema.
-            "p",
-            {
-                ...(this.options.domAttributes?.blockContent || {}),
-                ...HTMLAttributes,
-            },
-            this.options.domAttributes?.inlineContent || {}
+          this.name,
+          // We use a <p> tag, because for <li> tags we'd need an <ol> element to
+          // put them in to be semantically correct, which we can't have due to the
+          // schema.
+          "p",
+          {
+              ...(this.options.domAttributes?.blockContent || {}),
+              ...HTMLAttributes,
+          },
+          this.options.domAttributes?.inlineContent || {}
         );
     },
 });
 
 export const LetteredListItem = createBlockSpecFromStronglyTypedTiptapNode(
-    LetteredListItemBlockContent,
-    letteredListItemPropSchema
+  LetteredListItemBlockContent,
+  letteredListItemPropSchema
 );

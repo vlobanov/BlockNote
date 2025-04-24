@@ -22,32 +22,27 @@ import { UnreachableCaseError } from "../../util/typescript.js";
 import { getAbsoluteTableCells } from "../blockManipulation/tables/tables.js";
 import { getStyleSchema } from "../pmUtil.js";
 
-function stylesToMarks<T extends StyleSchema>(styles: Styles<T>, schema: Schema, styleSchema: T, blockType?: string) {
-    const marks: Mark[] = [];
+function stylesToMarks<T extends StyleSchema>(styles: Styles<T>, schema: Schema, styleSchema: T) {
+  const marks: Mark[] = [];
 
-    for (const [style, value] of Object.entries(styles)) {
-        const config = styleSchema[style];
-        if (!config) {
-            throw new Error(`style ${style} not found in styleSchema`);
-        }
-
-        if (config.propSchema === "boolean") {
-            marks.push(schema.mark(style));
-        } else if (config.propSchema === "string") {
-            marks.push(schema.mark(style, {stringValue: value}));
-        } else {
-            throw new UnreachableCaseError(config.propSchema);
-        }
+  for (const [style, value] of Object.entries(styles)) {
+    const config = styleSchema[style];
+    if (!config) {
+      throw new Error(`style ${style} not found in styleSchema`);
     }
 
-    const parseHardBreaks = !blockType || !schema.nodes[blockType].spec.code;
-
-    if (!parseHardBreaks) {
-        return [schema.text(styles as any, marks)];
+    if (config.propSchema === "boolean") {
+      marks.push(schema.mark(style));
+    } else if (config.propSchema === "string") {
+      marks.push(schema.mark(style, { stringValue: value }));
+    } else {
+      throw new UnreachableCaseError(config.propSchema);
     }
+  }
 
-    return marks;
+  return marks;
 }
+
 
 /**
  * Convert a StyledText inline element to a
@@ -83,8 +78,6 @@ function styledTextToNodes<T extends StyleSchema>(
                 }
             })
     );
-
-
 }
 
 /**
@@ -301,6 +294,10 @@ function blockOrInlineContentToContentNode(
 
   if (!block.content) {
     contentNode = schema.nodes[type].createChecked(block.props);
+    if('styles' in block && block.styles) {
+      const marks = stylesToMarks(block.styles, schema, styleSchema);
+      contentNode = contentNode.mark(marks);
+    }
   } else if (typeof block.content === "string") {
     const nodes = inlineContentToNodes(
       [block.content],
